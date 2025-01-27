@@ -1,6 +1,21 @@
 let rowCount = 1;
+
 document.querySelector(".elave-et").addEventListener("click", function() {
     let tbody = document.querySelector("tbody");
+    let lastRow = tbody.lastElementChild;
+    if (lastRow) {
+        let inputs = lastRow.querySelectorAll("input");
+        let allFilled = true;
+        inputs.forEach(input => {
+            if (input.value.trim() === "") {
+                allFilled = false;
+            }
+        });
+        if (!allFilled) {
+            alert("Inputlari doldurun");
+            return;
+        }
+    }
     let row = document.createElement("tr");
     let cell = document.createElement("td");
     cell.textContent = rowCount++;
@@ -18,16 +33,15 @@ document.querySelector(".elave-et").addEventListener("click", function() {
     let cancelButton = document.createElement("button");
     cancelButton.textContent = "imtina et";
     cancelButton.style.backgroundColor = "red";
-    cancelButton.style.color = "white";cancelButton.addEventListener("click", function() {
-        if (cancelButton.textContent === "Sil") {
-            if (window.confirm("Silmek isteyirsinizmi?")) {
-                tbody.removeChild(row);
-            }
-        } else {
+    cancelButton.style.color = "white";
+    cancelButton.addEventListener("click", function() {
+        if (window.confirm("Silmek isteyirsinizmi?")) {
             tbody.removeChild(row);
+            updateRowNumbers();
         }
-    });    
+    });
     buttonCell.appendChild(cancelButton);
+    row.appendChild(buttonCell);
 
     let saveButton = document.createElement("button");
     saveButton.textContent = "yadda saxla";
@@ -74,8 +88,14 @@ document.querySelector(".elave-et").addEventListener("click", function() {
         cancelButton.textContent = "Sil";
     });
     buttonCell.appendChild(saveButton);
-
-    row.appendChild(buttonCell);
-
     tbody.appendChild(row);
 });
+
+function updateRowNumbers() {
+    let tbody = document.querySelector("tbody");
+    let rows = tbody.querySelectorAll("tr");
+    rowCount = 1;
+    rows.forEach(row => {
+        row.firstElementChild.textContent = rowCount++;
+    });
+}
